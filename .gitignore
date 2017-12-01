@@ -1,0 +1,9 @@
+# Cache folders:
+cache/
+__pycache__/
+
+# Auth keys which should not be public:
+client_secret*
+
+# Contains a private google sheets URL, therefore removed from public:
+/JohnGodgames.py
