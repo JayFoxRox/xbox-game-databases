@@ -7,3 +7,6 @@ client_secret*
 
 # Contains a private google sheets URL, therefore removed from public:
 /JohnGodgames.py
+
+# Google API Key
+*.api_key
