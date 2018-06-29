@@ -258,15 +258,20 @@ for broken_hash, titles in broken_count.items():
       bad_brokens[broken_hash] = ["parser", broken]
 
 print()
-print("Encountered the following %d error(s) in database:" % len(bad_brokens))
-print(" - github: GitHub did not have this file / revision")
-print(" - parser: An unknown value was used in 'Broken' field")
-print(" - assert: There was no assert found at the specified line")
 print()
 
-for broken_hash in bad_brokens:
-  bad_broken = bad_brokens[broken_hash]
+if len(bad_brokens) == 0:
+  print("No errors found!")
+else:
+  print("Encountered the following %d error(s) in database:" % len(bad_brokens))
+  print(" - github: GitHub did not have this file / revision")
+  print(" - parser: An unknown value was used in 'Broken' field")
+  print(" - assert: There was no assert found at the specified line")
   print()
-  print(Fore.MAGENTA + ("Error: %s" % str(bad_broken)) + Style.RESET_ALL )
-  print("Games: %s" % str(broken_count[broken_hash]))
+
+  for broken_hash in bad_brokens:
+    bad_broken = bad_brokens[broken_hash]
+    print()
+    print(Fore.MAGENTA + ("Error: %s" % str(bad_broken)) + Style.RESET_ALL )
+    print("Games: %s" % str(broken_count[broken_hash]))
 
