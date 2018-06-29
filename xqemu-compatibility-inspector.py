@@ -226,7 +226,18 @@ for broken_hash, titles in broken_count.items():
   elif broken['Broken'] != "":
     try:
       path, line = broken['Broken'].rsplit(':', 1)
-      line = int(line)
+
+      # Convert line to integer and handle additional offset
+      sep = line.find("-")
+      if sep == -1:
+        sep = line.find("+")
+      if sep != -1:
+        line_base = int(line[0:sep])
+        line_offset = int(line[sep:])
+        line = line_base + line_offset
+      else:
+        line = int(line)
+
       s = 3
       lines = GetGithubLines(broken['Author'],broken['Repository'],broken['Commit'], path, line-s, line+s, line)
       if lines == None:
