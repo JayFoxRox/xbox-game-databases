@@ -219,6 +219,10 @@ for broken_hash, titles in broken_count.items():
     print("Broken texture: " + notes)
   elif broken['Broken'].lower() == "audio":
     print("Broken audio: " + notes)
+  elif broken['Broken'].lower() == "input":
+    print("Broken input: " + notes)
+  elif broken['Broken'].lower() == "memoryleak":
+    print("Broken memory leak: " + notes)
   elif broken['Broken'].lower() == "crash":
     print("Broken crash: " + notes)
   elif broken['Broken'].lower() == "noboot":
