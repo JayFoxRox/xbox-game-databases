@@ -1,17 +1,11 @@
 #!/usr/bin/env python3
  
-#from __future__ import print_function
-#import httplib2
-#import os
-
-#import copy
-import web
-#import extra
-#import difflib
-from apiclient import discovery
+from googleapiclient import discovery
 from colorama import Fore, Style
 
 import sys
+
+import web
 
 args = sys.argv[1:]
 
@@ -63,8 +57,9 @@ if len(api_key) == 0:
 def GetXQEMUCompatibilityList():
 
   if False:
-    tables = GetTables("http://xboxdevwiki.net/XQEMU/Compatibility_List")
-    games = GetWikitable(tables[0])
+    #tables = GetTables("http://xboxdevwiki.net/XQEMU/Compatibility_List")
+    #games = GetWikitable(tables[0])
+    pass
   else:
 
     # Load data from John Godgames google sheet
