@@ -216,17 +216,19 @@ for broken_hash, titles in broken_count.items():
   elif broken['Broken'].lower() == "shader":
     print("Broken shader: " + notes)
   elif broken['Broken'].lower() == "texture":
-    print("Broken texture: " + notes)
+    print("Broken texture(s): " + notes)
   elif broken['Broken'].lower() == "audio":
     print("Broken audio: " + notes)
   elif broken['Broken'].lower() == "input":
     print("Broken input: " + notes)
-  elif broken['Broken'].lower() == "memoryleak":
-    print("Broken memory leak: " + notes)
+  elif broken['Broken'].lower() == "performance":
+    print("Performance issues: " + notes)
+  elif broken['Broken'].lower() == "memleak":
+    print("Leaks memory: " + notes)
   elif broken['Broken'].lower() == "crash":
-    print("Broken crash: " + notes)
+    print("Crashes: " + notes)
   elif broken['Broken'].lower() == "noboot":
-    print("Broken boot: " + notes)
+    print("Does not boot: " + notes)
   elif broken['Broken'] != "":
     try:
       path, line = broken['Broken'].rsplit(':', 1)
