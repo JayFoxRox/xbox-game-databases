@@ -201,10 +201,36 @@ for broken_hash, titles in broken_count.items():
 
   print()
 
-  #FIXME: Loop over all affected games and display the notes
-  notes = "<Notes>"
+  notes = ""
+
+  if True:
+    #FIXME: Loop over all affected games and display the notes
+    for game_title in titles:
+      
+      #FIXME: Get game notes differently..
+      game = [x for x in all_games if x['Title'] == game_title]
+      assert(len(game) == 1)
+      game = game[0]
+
+      try:
+        game_notes = game['Notes'].strip() 
+      except:
+        continue
+      if game_notes == "":
+        continue
+      if notes != "":
+        notes += "---\n"
+      notes += Fore.WHITE + str(game['Title']) + Style.RESET_ALL + ": " + game_notes + "\n"
+
+  if notes == "":
+    notes = "<No notes>\n"
+
+  notes = "\n" + notes
+  notes = notes[:-1]
+  notes = notes.replace("\n", "\n    ")
+
   #try:
-  #  notes = game['Notes']
+  #  notes = 
   #except:
   #  pass
 
@@ -229,6 +255,8 @@ for broken_hash, titles in broken_count.items():
     print("Crashes: " + notes)
   elif broken['Broken'].lower() == "noboot":
     print("Does not boot: " + notes)
+  elif broken['Broken'].lower() == "lighting":
+    print("Lighting issues: " + notes)
   elif broken['Broken'] != "":
     try:
       path, line = broken['Broken'].rsplit(':', 1)
