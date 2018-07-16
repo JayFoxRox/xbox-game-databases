@@ -23,11 +23,8 @@ These instructions should work for most platforms which have git and Python (inc
 git clone https://github.com/JayFoxRox/xbox-game-databases.git
 cd xbox-game-databases
 pip3 install colorama
-pip3 install --upgrade google-api-python-client
 python3 xqemu-compatibility-inspector.py
 ```
-
-Then follow the onscreen directions to set up your [Google API key](https://goo.gl/3UN7Ut).
 
 
 ---

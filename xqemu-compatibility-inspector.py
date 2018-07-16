@@ -1,58 +1,12 @@
 #!/usr/bin/env python3
  
-from googleapiclient import discovery
+import os
+import csv
+from urllib.request import urlopen
+from urllib.request import Request
 from colorama import Fore, Style
-
 import sys
-
 import web
-
-args = sys.argv[1:]
-
-api_key = None
-api_key_file = "xqemu-compatibility-inspector.api_key"
-
-def failKey(message):
-  print(Fore.RED + message + Style.RESET_ALL)
-  print("")
-  print("If you think this is an error, try again.")
-  print("")
-  print("Otherwise follow the instructions at: https://goo.gl/3UN7Ut")
-  print("Then run this script with `--key <Google API key>` as argument to initialize your key-file.")
-  sys.exit(1)
-
-if len(args) >= 1:
-
-  # Update key
-  if args[0] == '--key':
-    args = args[1:] # Consume "--key"
-    if len(args) == 0:
-      print("Missing <Google API key> after `--key` option.")
-      sys.exit(1)
-    else:
-      api_key = args[0].strip()
-      with open(api_key_file, 'w') as f:
-        f.write(api_key)
-        f.close()
-        print("Stored key-file! Next time, you don't have to use the `--key` option.")
-        print("")
-      args = args[1:] # Consume <api_key>
-  else:
-    print("Unknown option '%s'." % args[0])
-    sys.exit(1)
-
-# Load API token from file if necessary
-if api_key == None:
-  try:
-    with open(api_key_file, 'r') as f:
-      api_key = f.read().strip()
-      f.close()
-  except:
-    failKey("Failed to load key-file and no valid Google API key provided.")
-
-# API key is empty
-if len(api_key) == 0:
-  failKey("Google API key is empty.")
 
 def GetXQEMUCompatibilityList():
 
@@ -65,54 +19,46 @@ def GetXQEMUCompatibilityList():
     # Load data from John Godgames google sheet
 
     games = []
+    sheet = "1sVtQ9SNPathKAMCqfYtvJQP0bs0UeLzP9otPHvZDMwE"
+
+    url = "https://docs.google.com/spreadsheets/d/%s/export?format=csv" % sheet
+
+    page_req = Request(url, headers={'User-Agent' : "Xbox-Database Tools"}) 
+    page_res = urlopen(url)
+    page_data = page_res.read()
+
+    page_data = page_data.decode("utf-8")
+    #print(page_data)
+
+    values = [x for x in csv.reader(page_data.split('\n'))]
 
 
-    spreadsheetId = '1sVtQ9SNPathKAMCqfYtvJQP0bs0UeLzP9otPHvZDMwE'
-    rangeName = 'Data!A1:Z'
-    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
-                    'version=v4&')
-      
+    heads = []
+    for i, row in enumerate(values):            
+        
+      # Some rows might be to short, so we extend them
+      row += [''] * max(0, len(heads) - len(row))
 
-    try:
-      service = discovery.build('sheets', 'v4',
-                                developerKey=api_key,
-                                discoveryServiceUrl=discoveryUrl)
-      result = service.spreadsheets().values().get(spreadsheetId=spreadsheetId, range=rangeName).execute()
+      # Parse the header
+      if i == 0:
+        for h in row:
+          name = h.strip()
+          if name == "": break
+          if name == "Repo.": name = "Repository"
+          if name == "commit": name = "Commit"
+          heads += [name]
+        continue
 
-    except:
-      failKey("Failed to load spreadsheet. Something might be wrong with your Google API key.")
+      # Parse each row
+      test = {}
+      for j in range(len(heads)):
+        test[heads[j]] = row[j].strip()
 
-    values = result.get('values', [])
+      # Game probably wasn't tested if this condition is true
+      if (test['Status'] == "" and test['Broken'] == ""):
+        continue
 
-    if not values:
-      print('No data found.')
-    else:
-      heads = []
-      for i, row in enumerate(values):            
-          
-        # Some rows might be to short, so we extend them
-        row += [''] * max(0, len(heads) - len(row))
-
-        # Parse the header
-        if i == 0:
-          for h in row:
-            name = h.strip()
-            if name == "": break
-            if name == "Repo.": name = "Repository"
-            if name == "commit": name = "Commit"
-            heads += [name]
-          continue
-
-        # Parse each row
-        test = {}
-        for j in range(len(heads)):
-          test[heads[j]] = row[j].strip()
-
-        # Game probably wasn't tested if this condition is true
-        if (test['Status'] == "" and test['Broken'] == ""):
-          continue
-
-        games += [test]
+      games += [test]
 
   return games
 
