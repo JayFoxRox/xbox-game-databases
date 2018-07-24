@@ -229,10 +229,10 @@ for broken_hash, titles in broken_count.items():
           bad_brokens[broken_hash] = ["assert", broken]
         for i in range(max(1,line - 2), line + 1):
           if lines[i - 1].find("default:") != -1:
-            print("Catchall (" + broken['Broken'] + "): " + str(titles))
+            print("Catchall (" + broken['Broken'] + "): " + notes)
         for i in range(max(1,line - 1), line + 1):
           if lines[i - 1].lower().find("untested") != -1:
-            print("Untested feature (" + broken['Broken'] + "): " + str(titles))
+            print("Untested feature (" + broken['Broken'] + "): " + notes)
     except:
       print("Error in database: '%s' caused problems" % str(broken['Broken']))
       bad_brokens[broken_hash] = ["parser", broken]
