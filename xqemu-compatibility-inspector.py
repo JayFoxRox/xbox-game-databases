@@ -85,7 +85,13 @@ def GetGithubLines(user, repo, revision, path, from_line = 1, to_line = 999999, 
       print(line)
   return lines
 
-
+def GetGithubLineUrl(user, repo, revision, path, from_line = -1, to_line = -1):
+  url = "https://github.com/%s/%s/blob/%s/%s" % (user, repo, revision, path)
+  if from_line != -1:
+    url += "#L%d" % from_line
+    if to_line != -1:
+      url += "-L%d" % to_line
+  return url
 
 xqemu_compat = GetXQEMUCompatibilityList()
 
@@ -224,6 +230,8 @@ for broken_hash, titles in broken_count.items():
         print(Fore.MAGENTA + "Bad report: " + str(broken) + " (GitHub error)" + Style.RESET_ALL)
         bad_brokens[broken_hash] = ["github", broken]
       else:
+        url = GetGithubLineUrl(broken['Author'],broken['Repository'],broken['Commit'], path, line)
+        print("  (URL: " + Fore.CYAN + url + Style.RESET_ALL + ")")
         if lines[line - 1].find("assert(") == -1:
           print(Fore.MAGENTA + "Bad report: " + str(broken) + " (Assert not found)" + Style.RESET_ALL)
           bad_brokens[broken_hash] = ["assert", broken]
